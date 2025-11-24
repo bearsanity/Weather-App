@@ -1,4 +1,6 @@
-//To make sure DOM is loaded before any JS tried to run
+"use strict";
+
+//To make sure DOM is loaded before any JS tries to run
 document.addEventListener('DOMContentLoaded', () => {
     
     //Setting up hooks
@@ -27,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //High level functions
     //====================
 
-    //Gets coordinates tthen plugs them into get weather function to get weather
+    //Gets coordinates then plugs them into get weather function to get weather
     async function getCoordinates(city){
         const geoUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${apiKey}`;
 
@@ -35,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = await response.json();
         console.log('Data:', data); //console.log to see that it's working
         
-        //limit = 1 in the api means only 1 result is returned, but it always returns an array so data[0] is neccesary
+        //limit = 1 in the api means only 1 result is returned, but it always returns an array so data[0] is necessary
         const latitude = data[0].lat;
         const longitude = data[0].lon;
 
