@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         console.log('Weather data:', data);
         renderCurrentWeather(data);
+        renderFiveDayForecast(data);
     }
     
     //Creates the card for current weather
@@ -33,12 +34,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const container = $('#current-weather');
         container.empty(); //To clear out old content if nto already empty
         
-        const current = weatherInfo.list[0] //cleaner than using weatherInfo.list[0] over and over
+        const current = weatherInfo.list[0]; //cleaner than using weatherInfo.list[0] over and over
         
         const city = weatherInfo.city.name;
         const temp = (current.main.temp).toFixed(1);
         const humidity = (current.main.humidity).toFixed(0);
-        const wind = (current.wind.speed).toFixed(2);
+        const wind = (current.wind.speed * 3.6).toFixed(2);//to change it to km/h
         const icon = current.weather[0].icon; //gives the icon code
        
         //Javascript Date object to convert the dt from the api
@@ -55,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .attr('alt', 'Icon displaying the current weather');
         const tempEl = $('<p>').text(`Temperature: ${temp}\u00B0C`);
         const humidityEl = $('<p>').text(`Humidity: ${humidity}\u0025`);
-        const windEl = $('<p>').text(`Wind speed: ${wind}m\u002Fs`);
+        const windEl = $('<p>').text(`Wind speed: ${wind} km\u002Fh`);
 
         container.append(
             header,
@@ -66,7 +67,52 @@ document.addEventListener('DOMContentLoaded', () => {
         )
 
     }
-    
+   
+    //same logic as the current weather but with a loop through indices to create a card for each day
+    function renderFiveDayForecast(weatherInfo) {
+        const container = $('#five-day-forecast');
+        container.empty(); // clear old forecast cards
+
+        // These indices give roughly noon for each of the next 5 days
+        const indices = [7, 15, 23, 31, 39];
+
+        indices.forEach(i => {
+            const dayData = weatherInfo.list[i];
+
+            // Extract data just like current weather
+            const date = new Date(dayData.dt * 1000).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric"
+            });
+
+            const temp = dayData.main.temp.toFixed(1);
+            const humidity = dayData.main.humidity.toFixed(0);
+            const wind = dayData.wind.speed.toFixed(2); // still in m/s
+            const icon = dayData.weather[0].icon;
+
+            // Create card
+            const card = $('<div>').addClass('forecast-card');
+
+            // Build DOM elements
+            const header = $('<h3>').text(date);
+
+            const img = $('<img>')
+                .attr('src', `https://openweathermap.org/img/wn/${icon}.png`)
+                .attr('alt', 'Weather icon');
+
+            const tempEl = $('<p>').text(`Temp: ${temp}\u00B0C`);
+            const windEl = $('<p>').text(`Wind: ${wind} m\u002Fs`);
+            const humidityEl = $('<p>').text(`Humidity: ${humidity}\u0025`);
+
+            // Append to card
+            card.append(header, img, tempEl, windEl, humidityEl);
+
+            // Append card to container
+            container.append(card);
+        });
+}
+
     //====================
     //High level functions
     //====================
