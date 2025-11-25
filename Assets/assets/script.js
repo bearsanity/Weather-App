@@ -21,13 +21,24 @@ document.addEventListener('DOMContentLoaded', () => {
     async function getWeather(latitude, longitude) {
         const weatherUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`;
 
-        const response = await fetch(weatherUrl);
-        const data = await response.json();
+        try { //Let's you attempt code that might fail without crashing the entire script. 
+            const response = await fetch(weatherUrl);
+            if (!response.ok) {
+                throw new Error('Invalid response from server');
+            }
+            const data = await response.json();
+            console.log('Weather data:', data);
+            renderCurrentWeather(data);
+            renderFiveDayForecast(data);
+        
+        } catch(err) {
+            alert('There was an error finding the weather.');
+            console.error(err);
+        };
 
-        console.log('Weather data:', data);
-        renderCurrentWeather(data);
-        renderFiveDayForecast(data);
-    }
+
+        
+    };
     
     //Creates the card for current weather
     function renderCurrentWeather(weatherInfo) {
@@ -99,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const header = $('<h3>').text(date);
 
             const img = $('<img>')
-                .attr('src', `https://openweathermap.org/img/wn/${icon}.png`)
+                .attr('src', `https://openweathermap.org/img/wn/${icon}@2x.png`)
                 .attr('alt', 'Weather icon');
 
             const tempEl = $('<p>').text(`Temp: ${temp}\u00B0C`);
@@ -162,6 +173,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const response = await fetch(geoUrl);
         const data = await response.json();
         console.log('Data:', data); //console.log to see that it's working
+        
+        //If the api returns bad data or no data it will end the process and throw an alert
+        if (!data || data.length === 0) {
+            alert('City not found. Please try searching again.');
+            return;
+        }
         
         //limit = 1 in the api means only 1 result is returned, but it always returns an array so data[0] is necessary
         const latitude = data[0].lat;
