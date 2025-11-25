@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const humidityEl = $('<p>').text(`Humidity: ${humidity}\u0025`);
         const windEl = $('<p>').text(`Wind speed: ${wind} km\u002Fh`);
 
+        //Append the card
         container.append(
             header,
             img,
@@ -88,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const temp = dayData.main.temp.toFixed(1);
             const humidity = dayData.main.humidity.toFixed(0);
-            const wind = dayData.wind.speed.toFixed(2); // still in m/s
+            const wind = (dayData.wind.speed * 3.6).toFixed(2);
             const icon = dayData.weather[0].icon;
 
             // Create card
@@ -102,11 +103,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 .attr('alt', 'Weather icon');
 
             const tempEl = $('<p>').text(`Temp: ${temp}\u00B0C`);
-            const windEl = $('<p>').text(`Wind: ${wind} m\u002Fs`);
+            const windEl = $('<p>').text(`Wind: ${wind} km\u002Fh`);
             const humidityEl = $('<p>').text(`Humidity: ${humidity}\u0025`);
 
-            // Append to card
-            card.append(header, img, tempEl, windEl, humidityEl);
+            // Append to card - Done this way because theres 5 instead of 1 card this time
+            card.append(header, 
+                img, 
+                tempEl,  
+                humidityEl,
+                windEl);
 
             // Append card to container
             container.append(card);
@@ -168,4 +173,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         getCoordinates(city);
     })
+
+     $('#history-toggle').on('click', () => {
+        $('#search-history').toggleClass('active');
+    });
 });

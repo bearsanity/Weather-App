@@ -11,26 +11,46 @@
     <header>
         <h1>Weather Dashboard</h1>
     </header>
-    
-    <section id="searchSection">
-        <input id="city-input" type = text placeholder = "Look for a city!">
-        <button id="search-button">Search</button>
-    </section>
-    
-    <!-- Current weather -->
-    <section id="current-weather">
-        <h2>Current Weather</h2>
-    </section>
 
-    <!-- 5 day forecast -->
-    <section id="five-day-forecast">
-        <h2>5 Day Forecast</h2>
-    </section>
+    <!-- Main layout: left column (search + history), right column (weather) -->
+    <main id="layout-container">
 
-    <!-- search history -->
-    <section id="search-history">
-    </section>
-    
+        <!-- LEFT COLUMN -->
+        <aside id="left-column">
+            
+            <!-- Search section -->
+            <section id="searchSection">
+                <input id="city-input" type="text" placeholder="Look for a city!">
+                <button id="search-button">Search</button>
+            </section>
+
+            <!-- This is only for mobile -->
+            <button id="history-toggle">Search History</button>
+
+            <!-- Search history -->
+            <section id="search-history">
+            </section>
+
+        </aside>
+
+        <!-- RIGHT COLUMN -->
+        <section id="right-column">
+
+            <!-- Current weather -->
+            <section id="current-weather">
+                <h2>Current Weather</h2>
+            </section>
+
+            <!-- 5 day forecast -->
+            <section id="five-day-forecast">
+                <h2>5 Day Forecast</h2>
+            </section>
+
+        </section>
+
+    </main>
+
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="assets/script.js"></script>
 </body>
