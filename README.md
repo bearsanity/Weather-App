@@ -10,6 +10,8 @@ Through this project, I learned how to work with multiple API endpoints, handle 
 
 ## Usage
 
+-Vist "https://bearsanity.github.io/Weather-App/"
+
 -Enter a city name (e.g., “London”) into the search box and click the Search button (or press Enter).
 
 -The current weather for that city will display: temperature, humidity, wind speed, and weather icon.
