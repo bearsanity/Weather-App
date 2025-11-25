@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //Creates the card for current weather
     function renderCurrentWeather(weatherInfo) {
         const container = $('#current-weather');
-        container.empty(); //To clear out old content if nto already empty
+        container.empty(); //To clear out old content if not already empty
         
         const current = weatherInfo.list[0]; //cleaner than using weatherInfo.list[0] over and over
         
@@ -90,6 +90,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         indices.forEach(i => {
             const dayData = weatherInfo.list[i];
+            if (!dayData) {
+                return; 
+            }
 
             // Extract data just like current weather
             const date = new Date(dayData.dt * 1000).toLocaleDateString("en-US", {
@@ -158,8 +161,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
             container.append(btn);
-    });
-    };
+        });
+    }
 
 
     //====================
@@ -168,26 +171,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //Gets coordinates then plugs them into get weather function to get weather
     async function getCoordinates(city){
-        const geoUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${apiKey}`;
+        try { 
+            const geoUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${apiKey}`;
 
-        const response = await fetch(geoUrl);
-        const data = await response.json();
-        console.log('Data:', data); //console.log to see that it's working
-        
-        //If the api returns bad data or no data it will end the process and throw an alert
-        if (!data || data.length === 0) {
-            alert('City not found. Please try searching again.');
-            return;
-        }
+            const response = await fetch(geoUrl);
+
+            if (!response.ok) {
+                throw new Error("Bad response from server");
+            }
+            
+            const data = await response.json();
+            console.log('Data:', data); //console.log to see that it's working
+
+            //If the api returns bad data or no data it will end the process and throw an alert
+            if (!Array.isArray(data) || data.length === 0) {
+                alert('City not found. Please try searching again.');
+                return;
+            }
         
         //limit = 1 in the api means only 1 result is returned, but it always returns an array so data[0] is necessary
-        const latitude = data[0].lat;
-        const longitude = data[0].lon;
+            const latitude = data[0].lat;
+            const longitude = data[0].lon;
 
-        console.log('Lat:', latitude);
-        console.log('Long:', longitude);
+            console.log('Lat:', latitude);
+            console.log('Lon:', longitude);
 
-        getWeather(latitude, longitude); //getWeather already ends with a console.log so no need to call it again to check if it works
+            getWeather(latitude, longitude); //getWeather already ends with a console.log so no need to call it again to check if it works
+       
+        } catch (err) {
+            alert('There was an error finding the city coordinates. Please try again.');
+            console.error(err);
+        }
     }
 
     //So we load the history buttons from previous sessions right away on page load
@@ -226,8 +240,19 @@ document.addEventListener('DOMContentLoaded', () => {
         renderHistoryButtons();
         getCoordinates(city);
     });
+    
     //For the collapsable search history menu on mobile only
     $('#history-toggle').on('click', () => {
         $('#search-history').toggleClass('active');
+    });
+
+    //Clear history button
+    $('#clear-history').on('click', () => {
+        //Confirmation to safeguard against accidental clicks
+        if (!confirm('Are you sure you want to clear your search history?')) {
+             return;
+        }
+        localStorage.removeItem('history'); // or localStorage.clear() but this is cleaner
+        renderHistoryButtons(); // refresh UI
     });
 });

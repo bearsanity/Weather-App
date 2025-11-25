@@ -170,3 +170,18 @@ header h1 {
         display: block;
     }
 }
+
+#clear-history {
+    margin-top: 10px;
+    width: 100%;
+    padding: 8px;
+    background: #8b0000; /* dark red */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#clear-history:hover {
+    background: #b30000;
+}
