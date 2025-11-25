@@ -27,7 +27,7 @@ Through this project, I learned how to work with multiple API endpoints, handle 
 <img width="943" height="297" alt="Screenshot 2025-11-25 at 2 55 07 AM" src="https://github.com/user-attachments/assets/cc35ed16-a6ce-441d-b049-c566365b8bc5" />
 
 
--Each search is saved to your search history; you can click past searches to reload them.
+-Each search is saved to your search history; you can click past searches to reload them. On mobile, the searches are under the dropdown in the same place to save screen space.
 
 <img width="296" height="365" alt="Screenshot 2025-11-25 at 2 55 53 AM" src="https://github.com/user-attachments/assets/64fca84f-8588-46dc-9bfc-899fa6b26df7" />
 
