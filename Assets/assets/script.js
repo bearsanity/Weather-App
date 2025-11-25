@@ -173,9 +173,9 @@ document.addEventListener('DOMContentLoaded', () => {
     async function getCoordinates(city){
         try { 
             const geoUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${apiKey}`;
-
+            
             const response = await fetch(geoUrl);
-
+            
             if (!response.ok) {
                 throw new Error("Bad response from server");
             }

@@ -89,7 +89,7 @@ header h1 {
 
 /* Toggle button (mobile only) */
 #history-toggle {
-    display: none; /* only appears in mobile */
+    display: none; /* so that it only appears in mobile */
 }
 
 /* === RIGHT COLUMN === */
