@@ -116,7 +116,40 @@ document.addEventListener('DOMContentLoaded', () => {
             // Append card to container
             container.append(card);
         });
-}
+    }
+
+    //Saving the search to localstorage
+    function saveCityToHistory(city) {
+        let history = JSON.parse(localStorage.getItem('history')) || []; // [] is incase nothing exists yet
+
+        //To prevent duplicates | .some() checks if any element in the array matches the given condition
+        const normalizedCity = city.toLowerCase();
+            if (!history.some(c => c.toLowerCase() === normalizedCity)) {
+            history.push(city);
+            localStorage.setItem('history', JSON.stringify(history));
+        }
+    };
+
+    //To create the history buttons | Same logic as the cards for current weather and 5 day weather
+    function renderHistoryButtons() {
+        const container = $('#search-history');
+        container.empty();
+
+        const history = JSON.parse(localStorage.getItem('history')) || [];
+
+        history.forEach(city => {
+            const btn = $('<button>')
+                .addClass('history-btn')
+                .text(city)
+                .on('click', () => {
+                    // Clicking this button should load the weather again
+                    getCoordinates(city);
+                });
+
+            container.append(btn);
+    });
+    };
+
 
     //====================
     //High level functions
@@ -137,10 +170,11 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Lat:', latitude);
         console.log('Long:', longitude);
 
-        getWeather(latitude, longitude); //getWeather already ends with a console.log
+        getWeather(latitude, longitude); //getWeather already ends with a console.log so no need to call it again to check if it works
     }
 
-
+    //So we load the history buttons from previous sessions right away on page load
+    renderHistoryButtons();
 
     //===============
     //Event listeners
@@ -154,11 +188,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (city === '') {
             return; //Prevents searching if search is empty
         }
-
+        saveCityToHistory(city);
+        renderHistoryButtons();
         getCoordinates(city);
-    })
+    });
 
-     cityInput.on('keypress', (event) => {
+    cityInput.on('keypress', (event) => {
         if (event.key !== "Enter") {
             return; //Prevents activation from other keys
         }
@@ -170,11 +205,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (city === '') {
             return; //Prevents searching if search is empty
         }
-
+        saveCityToHistory(city);
+        renderHistoryButtons();
         getCoordinates(city);
-    })
-
-     $('#history-toggle').on('click', () => {
+    });
+    //For the collapsable search history menu on mobile only
+    $('#history-toggle').on('click', () => {
         $('#search-history').toggleClass('active');
     });
 });
